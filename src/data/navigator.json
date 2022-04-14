@@ -1,0 +1,18 @@
+{
+  "HOME": {
+    "title": "Home",
+    "href": "/"
+  },
+  "SHOP": {
+    "title": "Shop",
+    "href": "/shop/shop-3-column"
+  },
+  "PAGES": {
+    "title": "Contact Us",
+    "href": "/other/contact-us"
+  },
+  "ABOUT": {
+    "title": "About us",
+    "href": "/other/about-us"
+  }
+}
