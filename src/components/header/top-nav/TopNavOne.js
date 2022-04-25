@@ -1,8 +1,9 @@
-import React from "react";
+import React,{useState} from "react";
 import Container from "../../other/Container";
 import SocialIcons from "../../other/SocialIcons";
 import { Select } from "antd";
 import Link from "next/link";
+import { getData } from './../../../utils/common';
 
 const flagData = [
   { name: "english", image: "/assets/images/header/flag-usa.png" },
@@ -12,6 +13,8 @@ const flagData = [
 
 export default function TopNavOne({ containerFluid }) {
   const { Option } = Select;
+  // const [userData, setUSerData] = useState(getData());
+  // console.log('userData: ', userData);
   return (
     <div className="top-nav-one">
       <Container fluid={containerFluid}>
@@ -53,12 +56,16 @@ export default function TopNavOne({ containerFluid }) {
               </Select>
             </div>
             <div className="top-nav-one-right__item">
-              <Link href={process.env.PUBLIC_URL + "/auth/login"}>
+            <Link href={process.env.PUBLIC_URL + "/auth/login"}>
                 <a>
                   <i className="fas fa-user" />
+                 
+                  {/* {userData.userName || 'Login' }  */}
                   Login
                 </a>
               </Link>
+           
+              
             </div>
           </div>
         </div>

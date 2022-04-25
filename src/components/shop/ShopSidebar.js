@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState, useEffect} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
 
@@ -10,6 +10,8 @@ import {
 } from "../../redux/actions/shopFilterActions";
 import categories from "../../data/categories.json";
 import { Button } from "antd";
+import { apiInstance } from './../../httpClient/index';
+import { getToken } from "../../utils/common";
 
 const data = {
   color: [
@@ -48,10 +50,35 @@ const ShopSidebarSection = ({ children, title, className }) => {
 };
 
 function ShopSidebar({ showShortcut, style }) {
+ 
   const dispatch = useDispatch();
   const shopFilterState = useSelector((state) => state.shopFilterReducer);
+  console.log('shopFilterState: ', shopFilterState);
   const { category, color, size, tag } = shopFilterState;
+  console.log('category: ', category);
+  const [catData, setCatData] = useState([])
+
+  useEffect(() => {
+    getAllCategory()
+  },[])
+
+  const getAllCategory = async() => {
+    try{
+      const {data} = await apiInstance.get(`category/get-all`, {headers : {
+        'Authorization' : getToken()
+      }})
+      setCatData(data.data)
+    }
+    catch(e){
+      console.log('e: ', e.response);
+
+    }
+  }
+
+
   const onChooseCategory = (e, val) => {
+    console.log('val: ', val);
+    console.log('e: ', e);
     e.preventDefault();
     dispatch(setCurrentCategory(val));
   };
@@ -75,12 +102,12 @@ function ShopSidebar({ showShortcut, style }) {
               All departments
             </a>
           </li>
-          {categories.map((item, index) => (
+          {catData.map((item, index) => (
             <li
-              className={classNames({ active: category === item.value })}
+              className={classNames({ active: category === item.name })}
               key={index}
             >
-              <a onClick={(e) => onChooseCategory(e, item.value)} href="#">
+              <a onClick={(e) => onChooseCategory(e, item.id)} href="#">
                 {item.name}
               </a>
             </li>

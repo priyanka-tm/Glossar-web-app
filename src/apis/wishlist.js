@@ -1,8 +1,10 @@
 import axiosService from "../common/axiosService";
 import { API_URL } from "../common/defines";
 import { renderParam } from "../common/utils";
+import { BASE_URL } from './../utils/common';
 
 const url = "/wishlist";
+const url1 = '/fevorite/create'
 
 export const fetchWishlistData = () => {
   let endpoint = API_URL + url;
@@ -15,6 +17,8 @@ export const fetchProductIdWishlistData = (pid) => {
 };
 
 export const addWishlistData = (data) => {
+  console.log('data: ', data);
+  // let endpoint = BASE_URL + url1;
   let endpoint = API_URL + url;
   return axiosService.post(endpoint, data);
 };

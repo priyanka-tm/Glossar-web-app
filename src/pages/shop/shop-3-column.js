@@ -20,6 +20,7 @@ function shopGrid3Column() {
   const [currentPage, setCurrentPage] = useState(1);
   const shopState = useSelector((state) => state.shopReducer);
   const { products } = shopState;
+  console.log('products: ', products);
   const shopFilterState = useSelector((state) => state.shopFilterReducer);
   const { sort, show, view, category, color, size, tag } = shopFilterState;
   useEffect(() => {

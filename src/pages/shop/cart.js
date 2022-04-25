@@ -19,6 +19,7 @@ import FetchDataHandle from "../../components/other/FetchDataHandle";
 import QuantitySelector from "../../components/other/QuantitySelector";
 import ShopOrderStep from "../../components/shop/ShopOrderStep";
 import PartnerOne from "../../components/sections/partners/PartnerOne";
+import { calculateSubTotal } from './../../common/shopUtils';
 
 function cart() {
   const dispatch = useDispatch();
@@ -28,14 +29,19 @@ function cart() {
     cartId: null,
   });
   const cartState = useSelector((state) => state.cartReducer);
+  console.log('cartState: ', cartState);
 
   useEffect(() => {
     dispatch(fetchCartRequest());
   }, []);
   const showModal = (message, cartId) => {
+    console.log('cartId: ', cartId);
+    console.log('message: ', message);
     setModalState({ ...modalState, visible: true, message: message, cartId });
   };
   const onChangeQuantity = (product, quantity) => {
+    console.log('quantity: ', quantity);
+    console.log('product: ', product);
     onChangeProductCartQuantity({
       product,
       quantity: quantity,
@@ -43,8 +49,11 @@ function cart() {
     });
   };
   const handleOk = (e) => {
+   
+    console.log('cartId: ', modalState.cartId);
     onRemoveProductFromCart({
-      cartId: modalState.cartId,
+      
+      cartId: modalState.cartId._id,
       onSuccess: () => {
         setModalState({ ...modalState, visible: false });
         message.success("Product removed from cart");
@@ -80,7 +89,9 @@ function cart() {
         <FetchDataHandle
           emptyDescription="No product in cart"
           data={cartState}
-          renderData={(data) => (
+          renderData={(data) => {
+            return (
+            
             <div className="cart">
               <div className="shop-table">
                 <table>
@@ -114,49 +125,63 @@ function cart() {
                     </tr>
                   </thead>
                   <tbody>
-                    {data.map((item, index) => (
-                      <tr key={index}>
-                        <td className="table-img">
-                          <div className="table-img-wrapper">
-                            <img
-                              src={process.env.PUBLIC_URL + item.coverImage}
-                              alt="Product image"
+                    {data.map((item, index) => {
+                      {/* console.log('item: ', item); */}
+                      return (
+                      
+                      item?.product?.map((ele,index) => {
+                        
+                        
+                        return (
+                          <tr key={index}>
+                          <td className="table-img">
+                            <div className="table-img-wrapper">
+                              <img
+                                src={process.env.PUBLIC_URL + ele?.item?.image[0]}
+                                alt="Product image"
+                              />
+                            </div>
+                          </td>
+                          <td className="table-name">{ele?.item?.name}</td>
+                          <td className="table-price">
+                            {formatCurrency(ele?.item?.price)}
+                          </td>
+                          <td>
+                            <QuantitySelector
+                              max={item.quantity}
+                              onChange={(val) => onChangeQuantity(item, val)}
+                              defaultValue={ele?.quantity}
                             />
-                          </div>
-                        </td>
-                        <td className="table-name">{item.name}</td>
-                        <td className="table-price">
-                          {formatCurrency(item.price)}
-                        </td>
-                        <td>
-                          <QuantitySelector
-                            max={item.quantity}
-                            onChange={(val) => onChangeQuantity(item, val)}
-                            defaultValue={item.cartQuantity}
-                          />
-                        </td>
-                        <td className="table-total">
-                          {formatCurrency(item.price * item.cartQuantity)}
-                        </td>
-                        <td className="table-remove">
-                          <Tooltip title="Remove product">
-                            <Button
-                              onClick={() =>
-                                showModal(
-                                  "Are you sure to remove this product from cart",
-                                  item.id
-                                )
-                              }
-                              icon={<i className="fal fa-times" />}
-                            ></Button>
-                          </Tooltip>
-                        </td>
-                      </tr>
-                    ))}
+                          </td>
+                          <td className="table-total">
+                          {/* {parseInt(ele.item.price) * parseInt(ele.quantity)} */}
+                            {formatCurrency(ele?.item?.price * ele?.quantity)}
+                          </td>
+                          <td className="table-remove">
+                            <Tooltip title="Remove product">
+                              <Button
+                                onClick={() =>
+                                  showModal(
+                                    "Are you sure to remove this product from cart",
+                                    ele.item
+                                  )
+                                }
+                                icon={<i className="fal fa-times" />}
+                              ></Button>
+                            </Tooltip>
+                          </td>
+                        </tr>
+                        ) 
+                      }
+                      
+                      )
+                     
+                    )
+                    })}
                   </tbody>
                 </table>
               </div>
-              <div className="cart-footer">
+              {/* <div className="cart-footer">
                 <div className="cart-footer__promo">
                   <Form
                     name="basic"
@@ -174,19 +199,11 @@ function cart() {
                     >
                       <Input placeholder="Coupon code" />
                     </Form.Item>
-                    <Form.Item>
-                      <Button type="primary" htmlType="submit">
-                        Apply coupon
-                      </Button>
-                    </Form.Item>
+                    
                   </Form>
                 </div>
-                <Button className="cart-footer__update" type="primary">
-                  <Link href={process.env.PUBLIC_URL + "/shop/shop-3-column"}>
-                    <a>Update cart</a>
-                  </Link>
-                </Button>
-              </div>
+               
+              </div> */}
               <div className="cart-total">
                 <h5>Cart total</h5>
                 <table>
@@ -194,7 +211,20 @@ function cart() {
                     <tr>
                       <th>SUBTOTAL</th>
                       <td>
-                        {formatCurrency(calculateTotalPrice(cartState.data))}
+                        {formatCurrency(calculateSubTotal(cartState.data))}
+                      </td>
+                    </tr>
+                   
+                    <tr>
+                      <th>taX</th>
+                      <td>
+                       2.5
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>DELIVERY FEES</th>
+                      <td>
+                        10
                       </td>
                     </tr>
                     <tr>
@@ -227,7 +257,8 @@ function cart() {
                 </div>
               </div>
             </div>
-          )}
+          )
+          }}
         />
         <PartnerOne />
       </Container>

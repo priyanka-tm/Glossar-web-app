@@ -20,6 +20,7 @@ import {
   onRemoveProductFromWishlist,
 } from "../../common/wishlistServices";
 import ProductDetailLayout from "../detail/product/ProductDetailLayout";
+import { apiInstance } from './../../httpClient/index';
 
 function Product({ data, className, type, countdownLast = 100000000 }) {
   const dispatch = useDispatch();
@@ -56,9 +57,10 @@ function Product({ data, className, type, countdownLast = 100000000 }) {
     });
   };
   const onAddWishlist = (product) => {
+    console.log('product:================= ', product);
     if (addToWishlistLoading) {
       return;
-    }
+    }    
     setAddToWishlistLoading(true);
     if (!productInWishlist) {
       onAddProductToWishlist({
@@ -244,16 +246,126 @@ function Product({ data, className, type, countdownLast = 100000000 }) {
             </div>
           </div>
         );
+        case "grid":
+        return (
+          <div className={`product-dale ${classNames(className)}`}>
+            <div className="product-dale-img">
+              <Link
+                href={process.env.PUBLIC_URL + `/product/[slug]`}
+                as={process.env.PUBLIC_URL + `/product/${data.id}`}
+              >
+                <a title={data.name}>
+                  <img src={data.image[0]} alt="Product image" />
+                </a>
+              </Link>
+            </div>
+
+            {/* <Countdown
+              date={Date.now() + getRandomArbitrary(100000000, 150000000)}
+              renderer={({ days, hours, minutes, seconds }) => {
+                return (
+                  <div className="product-dale-countdown">
+                    <div className="product-dale-countdown-item">
+                      <h6>{zeroPad(days)}</h6> <span>days</span>
+                    </div>
+                    <div className="product-dale-countdown-item">
+                      <h6>{zeroPad(hours)}</h6> <span>hr</span>
+                    </div>
+                    <div className="product-dale-countdown-item">
+                      <h6>{zeroPad(minutes)} </h6>
+                      <span>min</span>
+                    </div>
+                    <div className="product-dale-countdown-item">
+                      <h6>{zeroPad(seconds)}</h6> <span>sec</span>
+                    </div>
+                  </div>
+                );
+              }}
+            /> */}
+            <div className="product-dale-content">
+              <h5 className="product-dale-type">{data.category?.name}</h5>
+              <Link
+                href={process.env.PUBLIC_URL + `/product/[slug]`}
+                as={process.env.PUBLIC_URL + `/product/${data.id}`}
+              >
+                <a className="product-dale-name" title="Pure Pineapple">
+                  {data.name}
+                </a>
+              </Link>
+              <h3 className="product-dale-price">
+                {data.discount
+                  ? formatCurrency(data.price - data.discount)
+                  : formatCurrency(data.price)}
+                {data.discount && <del>{formatCurrency(data.price)}</del>}
+              </h3>
+            </div>
+            <div className="product-dale-select">
+              <Tooltip title="Add to wishlist">
+                <Button
+                  onClick={() => onAddWishlist(data)}
+                  className={`product-btn ${classNames({
+                    active: productInWishlist,
+                  })}`}
+                  type="primary"
+                  shape="round"
+                  icon={
+                    addToWishlistLoading ? (
+                      <LoadingOutlined spin />
+                    ) : (
+                      <i className="far fa-heart" />
+                    )
+                  }
+                />
+              </Tooltip>
+              <Tooltip title="Add to cart">
+                <Button
+                  onClick={() => onAddToCart(data)}
+                  className="product-btn"
+                  type="primary"
+                  shape="round"
+                  icon={
+                    addToCartLoading ? (
+                      <LoadingOutlined spin />
+                    ) : (
+                      <i className="far fa-shopping-bag" />
+                    )
+                  }
+                />
+              </Tooltip>
+              {/* <Tooltip title="Add to compare">
+                <Button
+                  onClick={() => onAddToCompare(data)}
+                  className={`product-btn ${classNames({
+                    active: productInCompare,
+                  })}`}
+                  type="primary"
+                  shape="round"
+                  icon={<i className="far fa-random" />}
+                />
+              </Tooltip> */}
+              <Tooltip title="Quick view">
+                <Button
+                  onClick={showModal}
+                  className="product-btn"
+                  type="primary"
+                  shape="round"
+                  icon={<i className="far fa-eye" />}
+                />
+              </Tooltip>
+            </div>
+          </div>
+        );
       case "list":
+        console.log('list: ');
         return (
           <div className="product-list">
             <div className="product-img">
               <Link
                 href={process.env.PUBLIC_URL + `/product/[slug]`}
-                as={process.env.PUBLIC_URL + `/product/${data.slug}`}
+                as={process.env.PUBLIC_URL + `/product/${data.id}`}
               >
                 <a title={data.name}>
-                  <img src={data.coverImage} alt="Product image" />
+                  <img src={data?.image[0]} alt="Product image" />
                 </a>
               </Link>
               <Button type="primary" onClick={showModal}>
@@ -261,25 +373,21 @@ function Product({ data, className, type, countdownLast = 100000000 }) {
               </Button>
             </div>
             <div className="product-list-content">
-              <h5 className="product-type">{data.category}</h5>
+              <h5 className="product-type">{data?.category?.name}</h5>
               <Link
                 href={process.env.PUBLIC_URL + `/product/[slug]`}
-                as={process.env.PUBLIC_URL + `/product/${data.slug}`}
+                as={process.env.PUBLIC_URL + `/product/${data.id}`}
               >
                 <a className="product-name" title="Pure Pineapple">
                   {data.name}
                 </a>
               </Link>
-              <Rate
-                className="product-rate"
-                disabled
-                defaultValue={data.rate}
-              />
+             
               <p className="product-description">
                 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
                 eiusmod tempor niam
               </p>
-              {data.quantity > 0 ? (
+              {/* {data.quantity > 0 ? (
                 <h5 className="product-availability -instock">
                   Availability: <span> {data.quantity} in stock</span>
                 </h5>
@@ -287,7 +395,7 @@ function Product({ data, className, type, countdownLast = 100000000 }) {
                 <h5 className="product-availability -outstock">
                   Availability: <span> Out stock</span>
                 </h5>
-              )}
+              )} */}
             </div>
             <div className="product-list-actions">
               <div className="product-detail-content__delivery">
@@ -325,23 +433,24 @@ function Product({ data, className, type, countdownLast = 100000000 }) {
           </div>
         );
       default:
+        console.log('default: ');
         return (
           <div className={`product ${classNames(className)}`}>
             <div className="product-img">
-              <Link
+            <Link
                 href={process.env.PUBLIC_URL + `/product/[slug]`}
-                as={process.env.PUBLIC_URL + `/product/${data.slug}`}
+                as={process.env.PUBLIC_URL + `/product/${data.id}`}
               >
                 <a title={data.name}>
-                  <img src={data.coverImage} alt="Product image" />
+                  <img src={data?.image[0]} alt="Product image" />
                 </a>
               </Link>
             </div>
             <div className="product-content">
-              <h5 className="product-type">{data.category}</h5>
+              <h5 className="product-type">{data?.category?.name}</h5>
               <Link
                 href={process.env.PUBLIC_URL + `/product/[slug]`}
-                as={process.env.PUBLIC_URL + `/product/${data.slug}`}
+                as={process.env.PUBLIC_URL + `/product/${data.id}`}
               >
                 <a className="product-name" title="Pure Pineapple">
                   {data.name}

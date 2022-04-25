@@ -21,12 +21,12 @@ function FunctionItems({ hideTotal, hideWishlist }) {
         <a className="function-items-item">
           <i className="icon_bag_alt" />
 
-          {!hideTotal &&
+          {/* {!hideTotal &&
             (cartState.data ? (
               <span>{formatCurrency(calculateTotalPrice(cartState.data))}</span>
             ) : (
               <span>{formatCurrency(0)}</span>
-            ))}
+            ))} */}
         </a>
       </Link>
     </div>

@@ -27,7 +27,8 @@ export const fetchCartRequest = () => {
     cartApis
       .fetchCartData()
       .then((res) => {
-        dispatch(fetchCartSuccess(res.data));
+        let {data} = res.data
+        dispatch(fetchCartSuccess([data]));
       })
       .catch((err) => {
         dispatch(fetchCartFail(err));

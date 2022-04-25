@@ -1,8 +1,10 @@
 import axiosService from "../common/axiosService";
 import { API_URL } from "../common/defines";
 import { renderParam } from "../common/utils";
+import { BASE_URL } from './../utils/common';
 
 const url = "/product";
+const url1 = "/product/get-all";
 
 const renderUrl = (url, limit, category) => {
   return (
@@ -13,7 +15,7 @@ const renderUrl = (url, limit, category) => {
 //Fetch list of products
 export const fetchProductsData = (query) => {
   let endpoint =
-    renderUrl(API_URL + url, query.limit, query.category) +
+    renderUrl(BASE_URL + url1, query.limit, query.category) +
     renderParam("_page", query.page) +
     renderParam("_sort", query.sort.sort) +
     renderParam("_order", query.sort.order) +
@@ -40,7 +42,9 @@ export const fetchBestSellerProductsData = (query) => {
 };
 
 export const fetchDaleProductsData = (query) => {
-  let endpoint = renderUrl(API_URL + url, query.limit, query.category);
+  console.log('query: ', query);
+  // let endpoint = renderUrl(API_URL + url, query.limit, query.category);
+  let endpoint = renderUrl(BASE_URL + url1, query.limit, query.category);
   return axiosService.get(endpoint);
 };
 

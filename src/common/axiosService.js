@@ -15,20 +15,25 @@ class AxiosService {
     return Promise.reject(error);
   }
 
-  get(url) {
-    return this.instance.get(url);
+  get(url, headers = {}) {
+    return this.instance.get(url, headers);
   }
 
-  post(url, body) {
-    return this.instance.post(url, body);
+  post(url, body, headers = {}) {
+    console.log('headers: ', headers);
+    return this.instance.post(url, body, headers);
   }
 
-  patch(url, body) {
-    return this.instance.patch(url, body);
+  patch(url, body, headers = {}) {
+    return this.instance.patch(url, body, headers);
   }
 
   delete(url) {
     return this.instance.delete(url);
+  }
+
+  put(url, body, headers = {}) {
+    return this.instance.put(url, body, headers);
   }
 }
 

@@ -20,18 +20,33 @@ export const onAddProductToCart = ({
           onError && onError("Reached maximum number of products");
           getQuantityAvailable && getQuantityAvailable(false);
         } else {
+          console.log('product:===== ', product);
           addCartData({
-            ...product,
-            id: uuidv4(),
-            productId: product.id,
-            cartQuantity: quantity,
+            // ...product,
+            // id: uuidv4(),
+            "product": [
+              {
+                  "item": product.id,
+                  "quantity": quantity
+              }
+             
+          ]
+            // item: product.id,
+            // quantity: quantity,
           })
-            .then((res) => onSuccess && onSuccess(res))
+            .then((res) => {
+              console.log('res:===== ', res);
+              onSuccess && onSuccess(res)
+            })
+            
             .catch(
-              (err) =>
+              (err) =>{
+                console.log('err: ', err.response);
                 onError &&
                 onError("Add product to cart failed, please try again", err)
-            );
+            
+              }
+              );
         }
       } else {
         let pData = res.data[0];
@@ -60,12 +75,21 @@ export const onAddProductToCart = ({
 };
 
 export const onRemoveProductFromCart = ({ cartId, onSuccess, onError }) => {
+  console.log('cartId: ', cartId);
+  
   if (cartId && cartId !== "" && cartId !== null) {
-    removeCartData(cartId)
-      .then((res) => onSuccess && onSuccess(res))
+    removeCartData({
+      "product": cartId
+    })
+      .then((res) => {
+        console.log('res: ', res);
+        onSuccess && onSuccess(res)})
       .catch(
-        (err) =>
+        (err) => {
+          console.log('err: ', err.response);
+
           onError && onError("Remove product failm, pleaser try again", err)
+        }
       );
   }
 };

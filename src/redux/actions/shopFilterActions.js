@@ -26,6 +26,7 @@ export const setCurrentView = (view) => {
 };
 
 export const setCurrentCategory = (category) => {
+  console.log('category: ', category);
   return {
     type: SHOP_FILTER.SET_CATEGORY,
     category: category,

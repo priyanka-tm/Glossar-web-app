@@ -27,6 +27,11 @@ export default function ProductDetailContent({ data, type }) {
   const avaiableQuantity =
     data.quantity - checkProductCartQuantity(cartState.data, data.id);
   console.log(avaiableQuantity);
+
+  const handleChange = (val) => {
+    console.log('val: ', val);
+    setCurrentQuantity(val)
+  }
   const onAddToCart = (product, quantity) => {
     if (addToCartLoading) {
       return;
@@ -122,13 +127,12 @@ export default function ProductDetailContent({ data, type }) {
                       ? formatCurrency(data.price - data.discount)
                       : formatCurrency(data.price)}
                   </h5>
-                  <span>
-                    <Rate defaultValue={data.rate} />
-                  </span>
+                  
                 </div>
               </h3>
               <QuantitySelector
-                onChange={(val) => setCurrentQuantity(val)}
+                // onChange={(val) => setCurrentQuantity(val)}
+                onChange={handleChange}
                 max={avaiableQuantity}
               />
               <div className="product-detail-content__actions">
@@ -162,11 +166,10 @@ export default function ProductDetailContent({ data, type }) {
   }
   return (
     <div className="product-detail-content">
-      <h5 className="product-type">{data.category}</h5>
+      <h5 className="product-type">{data.category?.name}</h5>
       <h2 className="product-detail-content__name">{data.name}</h2>
       <p className="product-detail-content__description">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-        tempor
+      {data.detail}
         {/* Change to {data.description} */}
       </p>
       <div className="product-detail-content__delivery">Free delivery</div>
@@ -178,9 +181,9 @@ export default function ProductDetailContent({ data, type }) {
               ? formatCurrency(data.price - data.discount)
               : formatCurrency(data.price)}
           </h5>
-          <span>
+          {/* <span>
             <Rate defaultValue={data.rate} />
-          </span>
+          </span> */}
         </div>
       </h3>
       <QuantitySelector

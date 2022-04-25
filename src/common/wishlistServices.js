@@ -9,7 +9,11 @@ export const onAddProductToWishlist = ({ product, onSuccess, onError }) => {
     .then((res) => {
       if (res.data.length === 0) {
         addWishlistData(product)
-          .then((res) => onSuccess && onSuccess(res))
+          .then((res) =>{
+            console.log('res:===================wish ', res);
+            onSuccess && onSuccess(res)
+          })
+
           .catch(
             (err) =>
               onError &&

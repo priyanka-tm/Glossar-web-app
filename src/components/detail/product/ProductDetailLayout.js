@@ -8,12 +8,15 @@ import { Col, Row } from "antd";
 import ProductDetailTab from "./elements/ProductDetailTab";
 
 function ProductDetailLayout({ data, type, hideTab, style }) {
+  console.log('hideTab: ', hideTab);
+  console.log('ProductDetailLayout data: ', data);
+
   if (type === "fluid") {
     return (
       <div className="product-detail" style={style}>
         <Row gutter={30}>
           <Col md={10}>
-            <ProductDetailImages type="column" images={data.images} />
+            <ProductDetailImages type="column" images={data.image} />
           </Col>
           <Col md={14}>
             <ProductDetailContent type="fluid" data={data} />
@@ -21,7 +24,7 @@ function ProductDetailLayout({ data, type, hideTab, style }) {
           <Col md={24}>
             {!hideTab && (
               <ProductDetailTab
-                fullDescription={data.fullDescription}
+                fullDescription={data.detail}
                 specifications={data.specifications}
                 reviews={data.reviews}
               />
@@ -35,7 +38,7 @@ function ProductDetailLayout({ data, type, hideTab, style }) {
     <div className="product-detail" style={style}>
       <Row gutter={30}>
         <Col md={12}>
-          <ProductDetailImages images={data.images} />
+          <ProductDetailImages images={data.image} />
         </Col>
         <Col md={12}>
           <ProductDetailContent data={data} />
@@ -43,7 +46,7 @@ function ProductDetailLayout({ data, type, hideTab, style }) {
         <Col xs={24} md={24}>
           {!hideTab && (
             <ProductDetailTab
-              fullDescription={data.fullDescription}
+              fullDescription={data.detail}
               specifications={data.specifications}
               reviews={data.reviews}
             />

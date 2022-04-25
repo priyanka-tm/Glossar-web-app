@@ -24,6 +24,8 @@ const ReviewItem = ({ data }) => {
 };
 
 function ProductDetailTab({ fullDescription, specifications, reviews }) {
+  console.log("===============================");
+  console.log('fullDescription: ', fullDescription);
   const onFinish = (values) => {
     console.log("Success:", values);
   };
@@ -39,7 +41,7 @@ function ProductDetailTab({ fullDescription, specifications, reviews }) {
             {fullDescription}
           </div>
         </TabPane>
-        <TabPane tab="Specifications" key="2">
+        {/* <TabPane tab="Specifications" key="2">
           <div className="product-detail-tab__specifications">
             <table>
               <tbody>
@@ -66,12 +68,12 @@ function ProductDetailTab({ fullDescription, specifications, reviews }) {
               </tbody>
             </table>
           </div>
-        </TabPane>
+        </TabPane> */}
         <TabPane tab="Reviews" key="3">
           <div className="product-detail-tab__reviews">
-            {reviews.map((item, index) => (
+            {/* {reviews.map((item, index) => (
               <ReviewItem key={index} data={item} />
-            ))}
+            ))} */}
             <div className="product-detail-tab__reviews-form">
               <h5>Add Review</h5>
               <Form

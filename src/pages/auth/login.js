@@ -1,15 +1,17 @@
 import { Breadcrumb, Form, Input, Button, Checkbox, Row, Col } from "antd";
-import { useNavigate } from "react-router-dom"
 import Link from "next/link";
 import React,{ useState } from "react";
 import { apiInstance } from "../../httpClient";
 import LayoutOne from "../../components/layout/LayoutOne";
 import Container from "../../components/other/Container";
 import PartnerOne from "../../components/sections/partners/PartnerOne";
+import { useRouter } from "next/router"
+import { setToken } from "../../httpClient/ClientHelper";
+import { setUserSession } from "../../utils/common";
 
 const login = () => {
 
-  const navigate = useNavigate();
+  const router = useRouter()
   const [email,setEmail]=useState();
   const [password,setPassword]=useState();
 
@@ -38,17 +40,23 @@ const login = () => {
       }
       try{
         console.log('userData----',loginData);
-        const respo = await apiInstance.post(`auth/login`,loginData)  
-        console.log("===========logindata====================",respo); 
-        navigate('/');
+        const res = await apiInstance.post(`auth/login`,loginData)  
+        console.log("===========logindata====================",res); 
+        if(res.status == 200){
+          setToken(res.data.data.token);
+        setUserSession(
+          res.data.data.token,
+          
+          res.data.data.userName,
+          res.data.data.email,
+          res.data.data.phone,
+          res.data.data
+        );
+        router.push('/')
 
-        <Routes>
-        <Route exact path="/" element={<Home/>}/>
-        <Route exact path="/home" element={<Home/>}/>
-        <Route exact path="/upcoming/:user" element={<Upcoming/>}/>
-        <Route exact path="/record/:user" element={<Record/>}/>
-        <Route path="*" element={<NotFound/>}/>
-      </Routes>
+        }
+        
+        
       }
       catch(error){
         console.log("erorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr", error.response);

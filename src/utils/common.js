@@ -1,6 +1,6 @@
 // export const BASE_URL = 'https://web-glooser.herokuapp.com/api/app';
 
-export const BASE_URL = 'http://192.168.1.17:12000/api/app';
+export const BASE_URL = 'http://192.168.1.9:12000/api/app';
 
 export const getUser = () => {
     const userStr = sessionStorage.getItem('user');
@@ -29,6 +29,7 @@ export const getUser = () => {
   };
   // set the token and user from the session storage
   export const setUserSession = (token, user, email, phone, data) => {
+   
     sessionStorage.setItem('token', token);
     sessionStorage.setItem('user', JSON.stringify(user));
     sessionStorage.setItem('user_email', JSON.stringify(email));

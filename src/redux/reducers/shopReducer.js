@@ -25,7 +25,7 @@ export default function shopReducer(state = initialState, action) {
           ...state.products,
           loading: false,
           data: action.payload.data,
-          count: action.payload.productCount,
+          count: action.payload.totalCount,
         },
       };
     case SHOP.FETCH_PRODUCTS_FAIL:

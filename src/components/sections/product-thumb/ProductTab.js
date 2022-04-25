@@ -77,11 +77,15 @@ function ProductTab({
           <TabPane tab="All" key="">
             {renderTabContent()}
           </TabPane>
-          {headerCategories.map((item, index) => (
+          {headerCategories.map((item, index) => {
+
+            return (
+            
             <TabPane tab={item} key={item}>
               {renderTabContent()}
             </TabPane>
-          ))}
+          )
+          } )}
         </Tabs>
       </div>
     </div>

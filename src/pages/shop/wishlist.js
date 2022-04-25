@@ -23,6 +23,7 @@ function wishlist() {
     cartId: null,
   });
   const cartState = useSelector((state) => state.cartReducer);
+  console.log('cartState: ', cartState);
   const wishlistState = useSelector((state) => state.wishlistReducer);
 
   const showModal = (message, productId) => {
@@ -90,7 +91,7 @@ function wishlist() {
                     <col style={{ width: 150 / 16 + "em" }} />
                     <col style={{ width: "30%" }} />
                     <col style={{ width: "30%" }} />
-                    <col style={{ width: "30%" }} />
+                    {/* <col style={{ width: "30%" }} /> */}
                     <col style={{ width: "20%" }} />
                   </colgroup>
                   <thead>
@@ -98,7 +99,7 @@ function wishlist() {
                       <th>Image</th>
                       <th>Product Name</th>
                       <th>Price</th>
-                      <th>Add to cart</th>
+                      {/* <th>Add to cart</th> */}
                       <th>
                         <Tooltip title="Clear cart">
                           <Button
@@ -114,21 +115,23 @@ function wishlist() {
                     </tr>
                   </thead>
                   <tbody>
-                    {data.map((item, index) => (
+                    {data.map((item, index) => {
+                      console.log('item: ', item);
+                      return (
                       <tr key={index}>
                         <td className="table-img">
                           <div className="table-img-wrapper">
                             <img
-                              src={process.env.PUBLIC_URL + item.coverImage}
+                              src={process.env.PUBLIC_URL + item?.image[0]}
                               alt="Product image"
                             />
                           </div>
                         </td>
-                        <td className="table-name">{item.name}</td>
+                        <td className="table-name">{item?.name}</td>
                         <td className="table-price">
                           {formatCurrency(item.price)}
                         </td>
-                        <td className="table-atc">
+                        {/* <td className="table-atc">
                           <Button
                             disabled={checkProductInCart(
                               cartState.data,
@@ -141,7 +144,7 @@ function wishlist() {
                           >
                             Add to cart
                           </Button>
-                        </td>
+                        </td> */}
                         <td className="table-remove">
                           <Tooltip title="Remove product">
                             <Button
@@ -156,7 +159,8 @@ function wishlist() {
                           </Tooltip>
                         </td>
                       </tr>
-                    ))}
+                    )
+                    })}
                   </tbody>
                 </table>
               </div>

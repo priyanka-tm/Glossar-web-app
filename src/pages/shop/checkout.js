@@ -20,13 +20,37 @@ import Container from "../../components/other/Container";
 import ShopOrderStep from "../../components/shop/ShopOrderStep";
 import PartnerOne from "../../components/sections/partners/PartnerOne";
 import FetchDataHandle from "../../components/other/FetchDataHandle";
+import { apiInstance } from "../../httpClient";
+import { getToken } from "../../utils/common";
 
 function checkout() {
   const [paymentMethod, setPaymentMethod] = useState("cod");
   const router = useRouter();
   const cartState = useSelector((state) => state.cartReducer);
-  const onFinish = (values) => {
-    router.push("/shop/order-complete");
+  const onFinish = async(values) => {
+    console.log('values: ', values);
+    const orderData = {
+      "name": values.firstname,
+      "country": values.country,
+      "address": values.street,
+      "zipCode": values.zip,
+      "city": values.city,
+      "phone": values.phone,
+      "email": values.email
+    }
+    try{
+      const res = await apiInstance.post(`order/create`, orderData, {
+        headers: {
+          "Authorization" : getToken()
+        }
+      } )
+      console.log('res: ', res);
+      router.push("/shop/order-complete");
+    }
+    catch(e){
+      console.log('e: ', e.response);
+
+    }
   };
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
@@ -63,7 +87,7 @@ function checkout() {
                       id="checkout-form"
                     >
                       <Row gutter={15}>
-                        <Col xs={24} sm={12}>
+                        <Col xs={24} sm={24}>
                           <Form.Item
                             label="First name"
                             name="firstname"
@@ -77,28 +101,7 @@ function checkout() {
                             <Input />
                           </Form.Item>
                         </Col>
-                        <Col xs={24} sm={12}>
-                          <Form.Item
-                            label="Last name"
-                            name="lastname"
-                            rules={[
-                              {
-                                required: true,
-                                message: "Please input your last name!",
-                              },
-                            ]}
-                          >
-                            <Input />
-                          </Form.Item>
-                        </Col>
-                        <Col span={24}>
-                          <Form.Item
-                            label="Company name (optional)"
-                            name="company"
-                          >
-                            <Input />
-                          </Form.Item>
-                        </Col>
+                        
                         <Col span={24}>
                           <Form.Item
                             label="Country"
@@ -106,19 +109,14 @@ function checkout() {
                             rules={[
                               {
                                 required: true,
-                                message: "Please choose your country!",
+                                message: "Please input your country!",
                               },
                             ]}
                           >
-                            <Select defaultValue="vietnam">
-                              <Select.Option value="vietnam">
-                                vietnam
-                              </Select.Option>
-                              <Select.Option value="usa">USA</Select.Option>
-                              <Select.Option value="japan">japan</Select.Option>
-                            </Select>
+                            <Input />
                           </Form.Item>
                         </Col>
+                       
                         <Col span={24}>
                           <Form.Item
                             label="Street address"
@@ -183,17 +181,7 @@ function checkout() {
                             <Input />
                           </Form.Item>
                         </Col>
-                        <Col span={24}>
-                          <Form.Item name="other-address">
-                            <h3 className="checkout-title">Shipping Address</h3>
-                            <Checkbox>Ship to a different address?</Checkbox>
-                          </Form.Item>
-                        </Col>
-                        <Col span={24}>
-                          <Form.Item label="Order notes (optional)" name="note">
-                            <Input.TextArea />
-                          </Form.Item>
-                        </Col>
+                        
                       </Row>
                     </Form>
                   </div>
@@ -245,9 +233,9 @@ function checkout() {
                         <Radio style={{ display: "block" }} value="cod">
                           Cash on delivery
                         </Radio>
-                        <Radio style={{ display: "block" }} value="paypal">
+                        {/* <Radio style={{ display: "block" }} value="paypal">
                           Paypal
-                        </Radio>
+                        </Radio> */}
                       </Radio.Group>
                     </div>
                     <Button

@@ -1,5 +1,6 @@
 import { SHOP } from "../actionTypes";
 import * as shopApis from "../../apis/shop";
+import { apiInstance } from './../../httpClient/index';
 
 //Get all products
 export const fetchProducts = () => ({
@@ -22,12 +23,16 @@ export const fetchProductsFail = (err) => ({
 });
 
 export const fetchProductsRequest = (query) => {
+  console.log('query: ', query);
   return (dispatch) => {
     dispatch(fetchProducts());
     shopApis
+    // apiInstance
       .fetchProductsData(query)
+      // .get('product/get-all?search=qwe&userId=6243ef402ad9ba8b556c1400&categoryId=6244003a1b8b68288c1323cc')
       .then((res) => {
-        dispatch(fetchProductsSuccess(res.data, res.headers["x-total-count"]));
+        let {data} = res.data
+        dispatch(fetchProductsSuccess(data));
       })
       .catch((err) => {
         dispatch(fetchProductsFail(err));
@@ -157,9 +162,13 @@ export const fetchDaleProductsRequest = (query) => {
   return (dispatch) => {
     dispatch(fetchDaleProducts());
     shopApis
+    // apiInstance
       .fetchDaleProductsData(query)
+      // .get('product/get-all')
       .then((res) => {
-        dispatch(fetchDaleProductsSuccess(res.data));
+        console.log('res:===== ', res);
+        let {data} = res.data
+        dispatch(fetchDaleProductsSuccess(data));
       })
       .catch((err) => {
         dispatch(fetchDaleProductsFail(err));
@@ -189,10 +198,13 @@ export const fetchProductDetailFail = (err) => ({
 export const fetchProductDetailRequest = (slug) => {
   return (dispatch) => {
     dispatch(fetchProductDetail());
-    shopApis
-      .fetchProductDetailData(slug)
+    // shopApis
+    apiInstance
+      // .fetchProductDetailData(slug)
+      .get(`product/get-one/${slug}`)
       .then((res) => {
-        dispatch(fetchProductDetailSuccess(res.data));
+        let {data} = res.data;
+        dispatch(fetchProductDetailSuccess([data]));
       })
       .catch((err) => {
         dispatch(fetchProductDetailFail(err));
